@@ -1,4 +1,6 @@
+import sys
 from datetime import date, timedelta
+from argparse import ArgumentParser
 
 import requests
 
@@ -39,8 +41,15 @@ def print_repository_with_issues(repository):
     print(output)
 
 
+def parse_args(argv):
+    parser = ArgumentParser()
+    parser.add_argument('--top-size', type=int, default=20)
+    return parser.parse_args(argv)
+
+
 if __name__ == '__main__':
-    trending_repositories = get_trending_repositories(20)
+    args = parse_args(sys.argv[1:])
+    trending_repositories = get_trending_repositories(args.top_size)
     for repository in trending_repositories:
         repository['issues_count'] = get_open_issues_amount(repository['url'])
     for repository in trending_repositories:
