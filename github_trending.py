@@ -23,14 +23,25 @@ def get_trending_repositories(top_size):
     return response.json()['items'][:top_size]
 
 
-def get_open_issues_amount(repo_owner, repo_name):
-    pass
+def get_open_issues_amount(repo_api_url):
+    # For details, see https://developer.github.com/v3/issues/#list-issues-for-a-repository
+    # repo_api_url looks like https://api.github.com/repos/:owner/:repo
+    issues_url = '{0}/issues'.format(repo_api_url)
+    return len(requests.get(issues_url).json())
 
 
 def print_repository_with_issues(repository):
-    pass
+    output = '{stars_count}♥ {issues_count}(!) {url}'.format(
+        stars_count=repository['stargazers_count'],
+        issues_count=repository['issues_count'],
+        url=repository['html_url']
+    )
+    print(output)
 
 
 if __name__ == '__main__':
     trending_repositories = get_trending_repositories(20)
-    print(trending_repositories)
+    for repository in trending_repositories:
+        repository['issues_count'] = get_open_issues_amount(repository['url'])
+    for repository in trending_repositories:
+        print_repository_with_issues(repository)
