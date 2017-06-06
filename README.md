@@ -1,6 +1,6 @@
 # Github Trends
 
-[TODO. There will be project description]
+A small script that shows the most starred repositories created in last week.
 
 # Project Goals
 
