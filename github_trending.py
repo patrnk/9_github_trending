@@ -5,18 +5,14 @@ from argparse import ArgumentParser
 import requests
 
 
-def get_week_ago_iso_date():
-    week_ago = date.today() - timedelta(days=7)
-    return week_ago.isoformat()
-
-
-def get_trending_repositories(top_size):
+def get_trending_repositories(top_size, starting_days_ago):
     # For details, see https://developer.github.com/v3/search/#search-repositories
     # We're not fetching more than one page of results.
     repositories_per_page = 100
     if top_size > repositories_per_page:
         raise ValueError('top_size cannot be greater than {0}'.format(repositories_per_page))
-    query = 'created:>={iso_datetime}'.format(iso_datetime=get_week_ago_iso_date())
+    starting_date = date.today() - timedelta(days=starting_days_ago)
+    query = 'created:>={iso_datetime}'.format(iso_datetime=starting_date.isoformat())
     params = {
         'q': query,
         'sort': 'stars',
@@ -44,12 +40,13 @@ def print_repository_with_issues(repository):
 def parse_args(argv):
     parser = ArgumentParser()
     parser.add_argument('--top-size', type=int, default=20)
+    parser.add_argument('--starting-days-ago', type=int, default=7)
     return parser.parse_args(argv)
 
 
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
-    trending_repositories = get_trending_repositories(args.top_size)
+    trending_repositories = get_trending_repositories(args.top_size, args.starting_days_ago)
     for repository in trending_repositories:
         repository['issues_count'] = get_open_issues_amount(repository['url'])
     for repository in trending_repositories:

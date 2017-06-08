@@ -1,12 +1,12 @@
 # Github Trends
 
-A small script that shows the most starred repositories created in last week.
+A small script that shows the most starred repositories created in last few days.
 
 Installation: `pip install -r requirements.txt`
 
 Usage: `python github_trending.py -h`
 
-It may take some time to process all the repositories created last week.
+It may take some time to process all the repositories.
 
 # Project Goals
 
