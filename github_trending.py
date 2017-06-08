@@ -8,6 +8,7 @@ import requests
 def get_trending_repositories(top_size, starting_days_ago):
     # For details, see https://developer.github.com/v3/search/#search-repositories
     # We're not fetching more than one page of results.
+    # We cannot fetch less than one page of results.
     repositories_per_page = 100
     if top_size > repositories_per_page:
         raise ValueError('top_size cannot be greater than {0}'.format(repositories_per_page))
