@@ -7,16 +7,16 @@ import requests
 
 def get_trending_repositories(top_size, starting_days_ago):
     # For details, see https://developer.github.com/v3/search/#search-repositories
-    # We're not fetching more than one page of results.
-    # We cannot fetch less than one page of results.
-    repositories_per_page = 100
-    if top_size > repositories_per_page:
-        raise ValueError('top_size cannot be greater than {0}'.format(repositories_per_page))
+    # We are deliberately not fetching more than one page of results.
+    MAX_REPO_PER_PAGE = 100  # https://developer.github.com/v3/#pagination
+    if top_size > MAX_REPO_PER_PAGE:
+        raise ValueError('top_size cannot be greater than {0}'.format(MAX_REPO_PER_PAGE))
     starting_date = date.today() - timedelta(days=starting_days_ago)
     query = 'created:>={iso_datetime}'.format(iso_datetime=starting_date.isoformat())
     params = {
         'q': query,
         'sort': 'stars',
+        'per_page': top_size,
     }
     response = requests.get('https://api.github.com/search/repositories', params=params)
     return response.json()['items'][:top_size]
