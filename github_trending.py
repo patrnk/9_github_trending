@@ -50,5 +50,4 @@ if __name__ == '__main__':
     trending_repositories = get_trending_repositories(args.top_size, args.starting_days_ago)
     for repository in trending_repositories:
         repository['issues_count'] = get_open_issues_amount(repository['url'])
-    for repository in trending_repositories:
         print_repository_with_issues(repository)
